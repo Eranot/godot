@@ -36,23 +36,21 @@
 
 #include "webrtc_peer_connection_extension.h"
 
-StringName WebRTCPeerConnection::default_extension;
+Ref<WebRTCPeerConnection> WebRTCPeerConnection::extension;
 
-void WebRTCPeerConnection::set_default_extension(const StringName &p_extension) {
-	ERR_FAIL_COND_MSG(!ClassDB::is_parent_class(p_extension, WebRTCPeerConnectionExtension::get_class_static()), vformat("Can't make %s the default WebRTC extension since it does not extend WebRTCPeerConnectionExtension.", p_extension));
-	default_extension = p_extension;
+void WebRTCPeerConnection::set_default_extension(Ref<WebRTCPeerConnection> p_extension) {
+	extension = p_extension;
 }
 
 WebRTCPeerConnection *WebRTCPeerConnection::create() {
 #ifdef WEB_ENABLED
 	return memnew(WebRTCPeerConnectionJS);
 #else
-	if (default_extension == String()) {
+	if (extension == NULL) {
 		WARN_PRINT_ONCE("No default WebRTC extension configured.");
 		return memnew(WebRTCPeerConnectionExtension);
 	}
-	Object *obj = ClassDB::instantiate(default_extension);
-	return Object::cast_to<WebRTCPeerConnectionExtension>(obj);
+	return *extension;
 #endif
 }
 

@@ -63,13 +63,13 @@ public:
 	};
 
 private:
-	static StringName default_extension;
+	static Ref<WebRTCPeerConnection> extension;
 
 protected:
 	static void _bind_methods();
 
 public:
-	static void set_default_extension(const StringName &p_name);
+	static void set_default_extension(Ref<WebRTCPeerConnection> p_extension);
 
 	virtual ConnectionState get_connection_state() const = 0;
 	virtual GatheringState get_gathering_state() const = 0;
